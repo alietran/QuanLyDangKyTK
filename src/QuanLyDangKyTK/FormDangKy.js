@@ -5,31 +5,142 @@ import { Select, Option } from "../Components/TextField";
 
 import { Heading3 } from "../Components/Heading";
 import { Button } from "../Components/Button";
+import Swal from "sweetalert2";
 export default class FormDangKy extends Component {
+  state = {
+    values: {
+      account: "",
+      fullName: "",
+      password: "",
+      phoneNumber: "",
+      email: "",
+    },
+    errors: {
+      account: "",
+      fullName: "",
+      password: "",
+      phoneNumber: "",
+      email: "",
+    },
+  };
+
+  handleChangeValue = (event) => {
+    let { name, value, type } = event.target;
+
+    let newValues = { ...this.state.values, [name]: value };
+    let newErrors = { ...this.state.errors };
+
+    if (value.trim() === "") {
+      newErrors[name] = name + " is required!";
+    } else {
+      newErrors[name] = "";
+    }
+
+    if (type === "email") {
+      const regexEmail =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      if (!regexEmail.test(value)) {
+        newErrors[name] = name + " is invalid";
+      } else {
+        newErrors[name] = "";
+      }
+    }
+
+    this.setState({
+      values: newValues,
+      errors: newErrors,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    let { values, errors } = this.state;
+
+    let valid = true;
+
+    for (let key in values) {
+      if (values[key] === "") {
+        valid = false;
+      }
+    }
+
+    for (let key in errors) {
+      if (errors[key] !== "") {
+        valid = false;
+      }
+    }
+    if (!valid) {
+      Swal.fire({
+        title: "Error!",
+        text: "Register fail",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    } else {
+      Swal.fire({
+        title: "Success!",
+        text: "Register success",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    }
+  };
   render() {
     return (
-      <div  >
+      <form onSubmit={this.handleSubmit}>
         <Heading3>Registration</Heading3>
         <Table>
           <Tr>
             <Td>
-              <TextField label="Account"></TextField>
+              <TextField
+                textDanger={this.state.errors.account}
+                value={this.state.values.account}
+                name="account"
+                label="Account"
+                onChange={this.handleChangeValue}
+              ></TextField>
             </Td>
             <Td>
-              <TextField label="Full Name"></TextField>
+              <TextField
+                value={this.state.values.fullName}
+                textDanger={this.state.errors.fullName}
+                name="fullName"
+                label="Full Name"
+                onChange={this.handleChangeValue}
+              ></TextField>
             </Td>
           </Tr>
           <Tr>
             <Td>
-              <TextField label="Password"></TextField>
+              <TextField
+                value={this.state.values.password}
+                textDanger={this.state.errors.password}
+                name="password"
+                label="Password"
+                onChange={this.handleChangeValue}
+              ></TextField>
             </Td>
             <Td>
-              <TextField label="Phone Number"></TextField>
+              <TextField
+                textDanger={this.state.errors.phoneNumber}
+                value={this.state.values.phoneNumber}
+                name="phoneNumber"
+                label="Phone Number"
+                onChange={this.handleChangeValue}
+              ></TextField>
             </Td>
           </Tr>
           <Tr>
             <Td>
-              <TextField label="Email"></TextField>
+              <TextField
+                type="email"
+                textDanger={this.state.errors.email}
+                value={this.state.values.email}
+                name="email"
+                label="Email"
+                onChange={this.handleChangeValue}
+              ></TextField>
             </Td>
             <Td>
               <Label>User Type</Label>
@@ -41,13 +152,15 @@ export default class FormDangKy extends Component {
           </Tr>
           <Tr>
             <Td>
-              <Button Register>Register</Button>
+              <Button type="submit" Register>
+                Register
+              </Button>
               <Button Update>Update</Button>
             </Td>
             <Td></Td>
           </Tr>
         </Table>
-      </div>
+      </form>
     );
   }
 }
