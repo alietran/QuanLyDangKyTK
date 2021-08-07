@@ -6,7 +6,9 @@ import { Select, Option } from "../Components/TextField";
 import { Heading3 } from "../Components/Heading";
 import { Button } from "../Components/Button";
 import Swal from "sweetalert2";
-export default class FormDangKy extends Component {
+import { registerAction } from "../redux/actions/QuanLyDangKyTKAction";
+import { connect } from "react-redux";
+class FormDangKy extends Component {
   state = {
     values: {
       account: "",
@@ -14,6 +16,7 @@ export default class FormDangKy extends Component {
       password: "",
       phoneNumber: "",
       email: "",
+      userType: "Customer",
     },
     errors: {
       account: "",
@@ -21,6 +24,7 @@ export default class FormDangKy extends Component {
       password: "",
       phoneNumber: "",
       email: "",
+      userType:""
     },
   };
 
@@ -28,6 +32,8 @@ export default class FormDangKy extends Component {
     let { name, value, type } = event.target;
 
     let newValues = { ...this.state.values, [name]: value };
+    // let userType = this.menu.value;
+
     let newErrors = { ...this.state.errors };
 
     if (value.trim() === "") {
@@ -77,18 +83,24 @@ export default class FormDangKy extends Component {
         icon: "error",
         confirmButtonText: "OK",
       });
-    } else {
+      
+    }
+      this.props.dispatch(registerAction(this.state.values));
+
       Swal.fire({
         title: "Success!",
         text: "Register success",
         icon: "success",
         confirmButtonText: "OK",
       });
-    }
+   
+
+   
+    
   };
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <Heading3>Registration</Heading3>
         <Table>
           <Tr>
@@ -144,15 +156,27 @@ export default class FormDangKy extends Component {
             </Td>
             <Td>
               <Label>User Type</Label>
-              <Select>
-                <Option>Customer</Option>
-                <Option>Client</Option>
+              <Select
+                //ref={(input) => (this.menu = input)}
+                name="userType"
+                value={this.state.values.userType}
+                onChange={this.handleChangeValue}
+              >
+                <Option value="Customer">Customer</Option>
+                <Option value="Client">Client</Option>
               </Select>
             </Td>
           </Tr>
           <Tr>
             <Td>
-              <Button type="submit" Register>
+              {/* ONCLICK */}
+              <Button
+                onClick={this.handleSubmit}
+                //let res = this.menu.value;
+                //console.log(res)1
+
+                Register
+              >
                 Register
               </Button>
               <Button Update>Update</Button>
@@ -164,3 +188,5 @@ export default class FormDangKy extends Component {
     );
   }
 }
+
+export default connect ()(FormDangKy);
