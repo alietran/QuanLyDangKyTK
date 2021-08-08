@@ -1,4 +1,4 @@
-import { register, deleteTK } from "../types/QuanLyDangKyTKTypes";
+import { register, deleteTK, editTK, updateTK } from "../types/QuanLyDangKyTKTypes";
 
 export const registerAction = (info) =>({
     type: register,
@@ -7,4 +7,13 @@ export const registerAction = (info) =>({
 export const deleteAction = (id) => ({
   type: deleteTK,
   id,
+});
+export const editAction = (taikhoan) => ({
+  type: editTK,
+  taikhoan,
+});
+
+export const updateAction = (taikhoan) => ({
+  type: updateTK,
+  taikhoan,
 });

@@ -3,14 +3,16 @@ import { Button } from "../Components/Button";
 import { Heading3 } from "../Components/Heading";
 import { Table, Thead, Th, Tbody, Tr, Td } from "../Components/Table";
 import { connect } from "react-redux";
-import { deleteAction } from "../redux/actions/QuanLyDangKyTKAction";
+import { deleteAction, editAction } from "../redux/actions/QuanLyDangKyTKAction";
 class DSTaiKhoan extends Component {
+ 
+
   renderTK = () => {
-   return this.props.taikhoan.map((tk, index) => {
+    return this.props.taikhoan.map((tk, index) => {
       return (
         // console.log(tk.id)
         <Tr key={index}>
-          <Td>{index+1}</Td>
+          <Td>{index + 1}</Td>
           <Td>{tk.account}</Td>
           <Td>{tk.fullName}</Td>
           <Td>{tk.password}</Td>
@@ -18,7 +20,14 @@ class DSTaiKhoan extends Component {
           <Td>{tk.phoneNumber}</Td>
           <Td>{tk.userType}</Td>
           <Td>
-            <Button Update>Edit</Button>
+            <Button
+              onClick={() => {
+                this.props.dispatch(editAction(tk));
+              }}
+              Update
+            >
+              Edit
+            </Button>
             <Button
               onClick={() => {
                 this.props.dispatch(deleteAction(tk.id));
@@ -32,7 +41,6 @@ class DSTaiKhoan extends Component {
       );
     });
   };
-
 
   render() {
     return (
@@ -58,6 +66,7 @@ class DSTaiKhoan extends Component {
 const mapStateToProps = (state) => {
   return {
     taikhoan: state.QuanLyDangKyTKReducer.taikhoan,
+   
   };
 };
 

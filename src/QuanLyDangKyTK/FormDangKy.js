@@ -6,7 +6,10 @@ import { Select, Option } from "../Components/TextField";
 import { Heading3 } from "../Components/Heading";
 import { Button } from "../Components/Button";
 import Swal from "sweetalert2";
-import { registerAction } from "../redux/actions/QuanLyDangKyTKAction";
+import {
+  registerAction,
+  updateAction,
+} from "../redux/actions/QuanLyDangKyTKAction";
 import { connect } from "react-redux";
 class FormDangKy extends Component {
   state = {
@@ -24,7 +27,7 @@ class FormDangKy extends Component {
       password: "",
       phoneNumber: "",
       email: "",
-      userType:""
+      userType: "",
     },
   };
 
@@ -83,20 +86,28 @@ class FormDangKy extends Component {
         icon: "error",
         confirmButtonText: "OK",
       });
-      
+      return;
     }
-      this.props.dispatch(registerAction(this.state.values));
 
-      Swal.fire({
-        title: "Success!",
-        text: "Register success",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-   
+    // this.setState({
+    //   values: {
+    //     account: "",
+    //     fullName: "",
+    //     password: "",
+    //     phoneNumber: "",
+    //     email: "",
+    //     userType: "Customer",
+    //   },
+    // });
 
-   
-    
+    //this.props.dispatch(registerAction(values));
+    this.props.dispatch(updateAction(values));
+    Swal.fire({
+      title: "Success!",
+      text: "Register success",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
   };
   render() {
     return (
@@ -179,7 +190,9 @@ class FormDangKy extends Component {
               >
                 Register
               </Button>
-              <Button Update>Update</Button>
+              <Button onClick={this.handleSubmit} Update>
+                Update
+              </Button>
             </Td>
             <Td></Td>
           </Tr>
@@ -187,6 +200,17 @@ class FormDangKy extends Component {
       </form>
     );
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.userEdit.id !== this.props.userEdit.id) {
+      this.setState({
+        values: this.props.userEdit,
+      });
+    }
+  }
 }
-
-export default connect ()(FormDangKy);
+const mapStateToProps = (state) => {
+  return {
+    userEdit: state.QuanLyDangKyTKReducer.userEdit,
+  };
+};
+export default connect(mapStateToProps)(FormDangKy);
