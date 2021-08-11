@@ -6,9 +6,10 @@ export const Input = styled.input`
   min-height: 35px;
   height: 35px;
   font-size: 17px;
-  width: 520px;
+  width: 545px;
   display: initial;
-;`
+ 
+`;
 
 export const Label = styled.span`
   color: #343a40;

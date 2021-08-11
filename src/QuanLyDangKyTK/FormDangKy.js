@@ -82,29 +82,25 @@ class FormDangKy extends Component {
     if (!valid) {
       Swal.fire({
         title: "Error!",
-        text: "Register fail",
+        text: "Fail",
         icon: "error",
         confirmButtonText: "OK",
       });
       return;
     }
-
-    // this.setState({
-    //   values: {
-    //     account: "",
-    //     fullName: "",
-    //     password: "",
-    //     phoneNumber: "",
-    //     email: "",
-    //     userType: "Customer",
-    //   },
-    // });
-
-    //this.props.dispatch(registerAction(values));
-    this.props.dispatch(updateAction(values));
+    let { name } = event.target;
+    //console.log(name);
+    let content = "";
+    if (name === "dangky") {
+      this.props.dispatch(registerAction(values));
+      content = "Register success"
+    } else if (name ==="update"){
+      this.props.dispatch(updateAction(values));
+      content = "Update success";
+    }
     Swal.fire({
       title: "Success!",
-      text: "Register success",
+      text: content,
       icon: "success",
       confirmButtonText: "OK",
     });
@@ -116,13 +112,24 @@ class FormDangKy extends Component {
         <Table>
           <Tr>
             <Td>
-              <TextField
-                textDanger={this.state.errors.account}
-                value={this.state.values.account}
-                name="account"
-                label="Account"
-                onChange={this.handleChangeValue}
-              ></TextField>
+              {this.props.disabledAccount ? (
+                <TextField
+                  textDanger={this.state.errors.account}
+                  value={this.state.values.account}
+                  name="account"
+                  label="Account"
+                  onChange={this.handleChangeValue}
+                ></TextField>
+              ) : (
+                <TextField
+                  disabled
+                  textDanger={this.state.errors.account}
+                  value={this.state.values.account}
+                  name="account"
+                  label="Account"
+                  onChange={this.handleChangeValue}
+                ></TextField>
+              )}
             </Td>
             <Td>
               <TextField
@@ -181,18 +188,35 @@ class FormDangKy extends Component {
           <Tr>
             <Td>
               {/* ONCLICK */}
-              <Button
-                onClick={this.handleSubmit}
-                //let res = this.menu.value;
-                //console.log(res)1
+              {this.props.disabled ? (
+                <Button name="dangky" onClick={this.handleSubmit} Register>
+                  Register
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  name="dangky"
+                  onClick={this.handleSubmit}
+                  Register
+                >
+                  Register
+                </Button>
+              )}
 
-                Register
-              >
-                Register
-              </Button>
-              <Button onClick={this.handleSubmit} Update>
-                Update
-              </Button>
+              {this.props.disabled ? (
+                <Button
+                  name="update"
+                  disabled
+                  onClick={this.handleSubmit}
+                  Update
+                >
+                  Update
+                </Button>
+              ) : (
+                <Button name="update" onClick={this.handleSubmit} Update>
+                  Update
+                </Button>
+              )}
             </Td>
             <Td></Td>
           </Tr>
@@ -204,6 +228,14 @@ class FormDangKy extends Component {
     if (prevProps.userEdit.id !== this.props.userEdit.id) {
       this.setState({
         values: this.props.userEdit,
+        errors: {
+          account: "",
+          fullName: "",
+          password: "",
+          phoneNumber: "",
+          email: "",
+          userType: "",
+        },
       });
     }
   }
@@ -211,6 +243,8 @@ class FormDangKy extends Component {
 const mapStateToProps = (state) => {
   return {
     userEdit: state.QuanLyDangKyTKReducer.userEdit,
+    disabled: state.QuanLyDangKyTKReducer.disabled,
+    disabledAccount: state.QuanLyDangKyTKReducer.disabledAccount,
   };
 };
 export default connect(mapStateToProps)(FormDangKy);

@@ -1,4 +1,9 @@
-import { deleteTK, editTK, register, updateTK } from "../types/QuanLyDangKyTKTypes";
+import {
+  deleteTK,
+  editTK,
+  register,
+  updateTK,
+} from "../types/QuanLyDangKyTKTypes";
 
 const stateDefault = {
   taikhoan: [
@@ -28,55 +33,79 @@ const stateDefault = {
     password: "",
     email: "",
     phoneNumber: "",
-    userType: "",
+    userType: "Customer",
   },
+  disabled: true,
+  disabledAccount: true,
 };
 
 export const QuanLyDangKyTKReducer = (state = stateDefault, action) => {
   switch (action.type) {
     case register: {
-      //console.log(action);
       let taikhoanNew = [...state.taikhoan];
-
       let index = taikhoanNew.findIndex(
-        (taikhoan) => taikhoan.account === action.info.account
+        (tk) => tk.id === action.info.id
       );
       if (index !== -1) {
         alert("Lỗi");
+        return {...state}
       } else {
         taikhoanNew.push(action.info);
       }
-      state.taikhoan = taikhoanNew;
-      return { ...state };
+      console.log(index)
+      state.userEdit = {
+        account: "",
+        fullName: "",
+        password: "",
+        email: "",
+        phoneNumber: "",
+        userType: "Customer",
+      };
+      console.log(taikhoanNew)
+      return { ...state, taikhoan: taikhoanNew };
     }
-
     case deleteTK: {
-     // console.log(action);
+      // console.log(action);
       let taikhoanNew = [...state.taikhoan];
       let index = taikhoanNew.findIndex(
-        (taikhoan) => taikhoan.id === action.id
+        (taikhoan) => taikhoan.account === action.account
       );
-    //  console.log(action.id);
+      //  console.log(action.id);
       if (index !== -1) {
         taikhoanNew.splice(index, 1);
       }
       return { ...state, taikhoan: taikhoanNew };
     }
     case editTK: {
-     // console.log(action)
-      return { ...state ,userEdit : action.taikhoan};
+      // console.log(action)
+      return {
+        ...state,
+        userEdit: action.taikhoan,
+        disabled: false,
+        disabledAccount: false,
+      };
     }
-    case updateTK: {    
+    case updateTK: {
       //state.userEdit = {...state.userEdit,email: action.taikhoan.email,phoneNumber: action.taikhoan.phoneNumber ...};
-      state.userEdit = action.taikhoan;
+      state.userEdit = {...action.taikhoan};
       let taikhoanNew = [...state.taikhoan];
-      let index  = taikhoanNew.findIndex((taikhoan)=>taikhoan.id === state.userEdit.id);
-      if(index !== -1) {
-        taikhoanNew[index] = state.userEdit
+      let index = taikhoanNew.findIndex(
+        (taikhoan) => taikhoan.id === state.userEdit.id
+      );
+      if (index !== -1) {
+        taikhoanNew[index] = state.userEdit;
       }
-      console.log(index)
-      state.taikhoan = taikhoanNew;
-      return {...state};
+      //console.log(index)
+      state.userEdit = {
+        account: "",
+        fullName: "",
+        password: "",
+        email: "",
+        phoneNumber: "",
+        userType: "Customer",
+      };
+
+      return { ...state,taikhoan : taikhoanNew , disabled: true, disabledAccount: true};
     }
     default:
       return { ...state };

@@ -3,9 +3,12 @@ import { Button } from "../Components/Button";
 import { Heading3 } from "../Components/Heading";
 import { Table, Thead, Th, Tbody, Tr, Td } from "../Components/Table";
 import { connect } from "react-redux";
-import { deleteAction, editAction } from "../redux/actions/QuanLyDangKyTKAction";
+import {
+  deleteAction,
+  editAction,
+} from "../redux/actions/QuanLyDangKyTKAction";
 class DSTaiKhoan extends Component {
- 
+
 
   renderTK = () => {
     return this.props.taikhoan.map((tk, index) => {
@@ -28,6 +31,7 @@ class DSTaiKhoan extends Component {
             >
               Edit
             </Button>
+
             <Button
               onClick={() => {
                 this.props.dispatch(deleteAction(tk.id));
@@ -66,7 +70,8 @@ class DSTaiKhoan extends Component {
 const mapStateToProps = (state) => {
   return {
     taikhoan: state.QuanLyDangKyTKReducer.taikhoan,
-   
+    disabled: state.QuanLyDangKyTKReducer.disabled,
+
   };
 };
 
